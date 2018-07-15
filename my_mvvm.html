@@ -6,8 +6,11 @@
 </head>
 <body>
 <div id="app">
-    <input type="text" v-model="message"/>
-    {{message}}
+    <input type="text" v-model="message.a"/>
+    {{message.a}}
+    <ul>
+        <li>{{message.a}}</li>
+    </ul>
 </div>
 <script src="compile.js"></script>
 <script src="MVVM.js"></script>
@@ -15,7 +18,9 @@
     let vm = new MVVM({
         el: '#app',
         data: {
-        	message: 'hello jiayanni'
+        	message: {
+		        a:'hello jiayanni'
+	        }
         }
     })
 </script>

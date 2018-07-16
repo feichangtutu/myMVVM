@@ -28,6 +28,7 @@ class Observer {
 			enumerable: true,
 			configurable: true,
 			get(){// 取值时调用的方法
+				// console.log(Dep.target)
 				Dep.target && dep.addSub(Dep.target)
 				return value
 			},

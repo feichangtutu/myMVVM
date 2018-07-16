@@ -70,7 +70,7 @@ class Compile {
 			//  是文本节点
 			// 这里需要编译文本
 				this.compileText(node)
-				console.log('text', node)
+				// console.log('text', node)
 			}
 		})
 	}
@@ -119,10 +119,21 @@ CompileUtil = {
 		return expr.replace(/\{\{([^}]+)\}\}/g, (...arguments)=>{
 			new Watcher(vm, arguments[1], (newValue)=> {
 				// 如果数据变化了，文本节点需要重新获取依赖的属性更新文本中的内容
-				updateFn && updateFn(node, this.getTextVal( ))
+				updateFn && updateFn(node, this.getTextVal(vm, expr ))
 			})
 		})
 		updateFn && updateFn(node, value)
+	},
+	setVal(vm, expr, value){
+		expr = expr.split('.')
+		// 收敛
+		return expr.reduce((prev, next, currentIndex)=>{
+			if(currentIndex === expr.length-1){
+				return prev[next] = value
+			}
+			return prev[next]
+		}, vm.$data)
+		
 	},
 	model(node, vm, expr) {// 输入框处理
 		let updateFn = this.updater['modelUpdater']
@@ -130,6 +141,10 @@ CompileUtil = {
 		new Watcher(vm, expr, ()=>{
 			 //	当值变化后会调用callback 将新的值传递过来
 			updateFn && updateFn(node, this.getVal(vm, expr))
+		})
+		node.addEventListener('input',(e)=>{
+			let newValue = e.target.value
+			this.setVal(vm, expr, newValue)
 		})
 		updateFn && updateFn(node, this.getVal(vm, expr))
 	},

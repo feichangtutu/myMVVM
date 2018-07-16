@@ -3,6 +3,7 @@
  */
 class Compile {
 	constructor(el, vm){
+		console.log(1)
 		this.el = this.isElementNode(el) ? el : document.querySelector(el)
 		this.vm = vm
 		if(this.el){

@@ -3,7 +3,6 @@
  */
 class Observer {
 	constructor(data){
-		console.log('aaaaa')
 		this.observe(data)
 	}
 	observe(data){
@@ -22,11 +21,14 @@ class Observer {
 	// 定义响应式
 	defineReactive(obj, key, value){
 		let that = this
+		// ???
+		// 每个变化的数据，都会对应一个数组，这个数组是存放所有更新的操作
+		let dep = new Dep()
 		Object.defineProperty(obj, key, {
 			enumerable: true,
 			configurable: true,
-			get(){
-				// 取值时调用的方法
+			get(){// 取值时调用的方法
+				Dep.target && dep.addSub(Dep.target)
 				return value
 			},
 			set(newValue){
@@ -35,7 +37,20 @@ class Observer {
 				if(newValue != value){
 					value = newValue
 				}
+				dep.notify() //通知所有人，数据更新了
 			}
 		})
+	}
+}
+class Dep{
+	constructor(){
+	//	订阅的数组
+		this.subs = []
+	}
+	addSub(watcher){
+		this.subs.push(watcher)
+	}
+	notify(){
+		this.subs.forEach(watcher=>watcher.update())
 	}
 }

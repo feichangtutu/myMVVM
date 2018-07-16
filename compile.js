@@ -34,7 +34,7 @@ class Compile {
 			// console.log(attr.name,1)
 			//判断属性名字是不是包含v-
 			let attrName = attr.name
-			console.log(this.isDirective(attrName))
+			// console.log(this.isDirective(attrName))
 			if(this.isDirective(attrName)){
 				// 取到对应的值放到节点的值中
 				let expr = attr.value
@@ -116,10 +116,21 @@ CompileUtil = {
 		let updateFn = this.updater['textUpdater']
 		// console.log(expr)
 		let value = this.getTextVal(vm, expr)
+		return expr.replace(/\{\{([^}]+)\}\}/g, (...arguments)=>{
+			new Watcher(vm, arguments[1], (newValue)=> {
+				// 如果数据变化了，文本节点需要重新获取依赖的属性更新文本中的内容
+				updateFn && updateFn(node, this.getTextVal( ))
+			})
+		})
 		updateFn && updateFn(node, value)
 	},
 	model(node, vm, expr) {// 输入框处理
 		let updateFn = this.updater['modelUpdater']
+		// 这里应该加一个监控，数据变化了 应该调用这个watch的callback
+		new Watcher(vm, expr, ()=>{
+			 //	当值变化后会调用callback 将新的值传递过来
+			updateFn && updateFn(node, this.getVal(vm, expr))
+		})
 		updateFn && updateFn(node, this.getVal(vm, expr))
 	},
 	updater: {

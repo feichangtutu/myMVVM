@@ -14,7 +14,6 @@ class Observer {
 		}
 		// 要将数据一一劫持,先获取到data的key  value
 		Object.keys(data).forEach(key => {
-			alert(key)
 			// 劫持
 			this.defineReactive(data, key, data[key])
 			this.observe(data[key]) // 深度递归劫持
@@ -23,8 +22,6 @@ class Observer {
 	// 定义响应式
 	defineReactive(obj, key, value){
 		let that = this
-		obj.key = value
-		alert(key)
 		Object.defineProperty(obj, key, {
 			enumerable: true,
 			configurable: true,

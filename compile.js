@@ -3,7 +3,6 @@
  */
 class Compile {
 	constructor(el, vm){
-		console.log(1)
 		this.el = this.isElementNode(el) ? el : document.querySelector(el)
 		this.vm = vm
 		if(this.el){
@@ -30,16 +29,16 @@ class Compile {
 	//	带 v-model v-text v-*等
 	//	取出当前节点的属性
 		let attrs = node.attributes
-		console.log(attrs) // 0: type 1:v-model
+		// console.log(attrs) // 0: type 1:v-model
 		Array.from(attrs).forEach( attr => {
-			console.log(attr.name,1)
+			// console.log(attr.name,1)
 			//判断属性名字是不是包含v-
 			let attrName = attr.name
 			console.log(this.isDirective(attrName))
 			if(this.isDirective(attrName)){
 				// 取到对应的值放到节点的值中
 				let expr = attr.value
-				console.log('属性名 :'+expr)
+				// console.log('属性名 :'+expr)
 				//	node vm.$data expr
 				let [,type] = attrName.split('-')
 				CompileUtil[type](node, this.vm, expr)
@@ -63,7 +62,7 @@ class Compile {
 		Array.from(childNodes).forEach( node => {
 			if(this.isElementNode(node)){
 			//	是元素节点，还需要继续深入的检查
-				console.log('element', node)
+			// 	console.log('element', node)
 				// 这里需要编译元素
 				this.compileElement(node)
 				this.compile(node)
@@ -102,7 +101,7 @@ CompileUtil = {
 		// 如果expr为 message.a.b
 		//  expr.split('.')返回为【'message'，'a','b'】
 		// reduce() 方法对累加器和数组中的每个元素（从左到右）应用一个函数，将其减少为单个值。
-		console.log(expr,22)
+		// console.log(expr,22)
 		return expr.reduce((prev, next)=>{
 			return prev[next]
 		}, vm.$data)
@@ -115,7 +114,7 @@ CompileUtil = {
 	},
 	text(node, vm, expr){ //文本处理
 		let updateFn = this.updater['textUpdater']
-		console.log(expr)
+		// console.log(expr)
 		let value = this.getTextVal(vm, expr)
 		updateFn && updateFn(node, value)
 	},
